@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\Serializer;
 
 use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Util\FormWrapper;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -33,6 +35,10 @@ class SymfonySerializerAdapter implements Serializer
      */
     public function serialize($data, $format, Context $context)
     {
+        if ($data instanceof FormInterface && $format == 'xml') {
+            $data = new FormWrapper($data);
+        }
+
         $newContext = $this->convertContext($context);
         $newContext['serializeNull'] = $context->getSerializeNull();
 
